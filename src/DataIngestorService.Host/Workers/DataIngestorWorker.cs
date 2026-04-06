@@ -1,6 +1,6 @@
-namespace DataIngestorService.Host;
+namespace DataIngestorService.Host.Workers;
 
-public class Worker(ILogger<Worker> logger) : BackgroundService
+public class DataIngestorWorker(ILogger<DataIngestorWorker> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
