@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/DataIngestorService.Core/DataIngestorService.Core.csproj" />
+    <Project Path="src/DataIngestorService.Host/DataIngestorService.Host.csproj" />
+    <Project Path="src/DataIngestorService.Infrastructure/DataIngestorService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DataIngestorService.Core.Tests/DataIngestorService.Core.Tests.csproj" />
+    <Project Path="tests/DataIngestorService.Host.Tests/DataIngestorService.Host.Tests.csproj" />
+    <Project Path="tests/DataIngestorService.Infrastructure.Tests/DataIngestorService.Infrastructure.Tests.csproj" />
+  </Folder>
+</Solution>
