@@ -5,9 +5,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
 using OpenTelemetry.Metrics;
-using Serilog;
 
-var builder = WebApplication.CreateBuilder();
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseCustomSerilog(builder.Configuration);
 
@@ -17,11 +16,14 @@ builder.Services.AddWolverineMessaging(builder.Host, builder.Configuration);
 
 builder.Services.AddHealthChecks()
     .AddCheck("live", () => Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy())
-    .AddRabbitMQ()
-    .AddUrlGroup(new Uri(builder.Configuration["WeakApp:BaseUrl"]!), "weakapp");
+    .AddRabbitMQ();
 
 builder.Services.AddOpenTelemetry()
     .WithMetrics(m => m.AddPrometheusExporter());
+
+builder.Services.AddInfrastructureServices();
+
+var config = builder.Configuration;
 
 var app = builder.Build();
 
