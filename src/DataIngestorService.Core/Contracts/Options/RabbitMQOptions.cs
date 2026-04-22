@@ -1,11 +1,28 @@
-﻿namespace DataIngestorService.Core.Contracts.Options;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DataIngestorService.Core.Contracts.Options;
 
 public class RabbitMQOptions
 {
     public const string SectionName = "RabbitMQ";
-    public string HostName { get; set; } = string.Empty;
-    public int Port { get; set; } = 5672;
-    public string UserName { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
-    public string ExchangeName { get; set; } = string.Empty;
+
+    [Required]
+    public string HostName { get; set; }
+
+    public int Port { get; set; }
+
+    [Required]
+    public string UserName { get; set; }
+
+    [Required]
+    public string Password { get; set; }
+
+    [Required]
+    public string ExchangeName { get; set; }
+
+    [Required]
+    public string QueueName { get; set; }
+
+    [Required]
+    public string QueueKey { get; set; }
 }
