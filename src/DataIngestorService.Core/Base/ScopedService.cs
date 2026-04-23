@@ -2,7 +2,7 @@
 
 namespace DataIngestorService.Core.Base;
 
-public sealed class ScopedService<T> : IDisposable
+public class ScopedService<T> : IDisposable
 {
     public T Service { get; init; }
 

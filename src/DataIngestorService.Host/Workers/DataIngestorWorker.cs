@@ -32,7 +32,10 @@ public class DataIngestorWorker(
                 logger.LogError(ex, "{ServiceName} failed to read data from WeakApp.", nameof(DataIngestorWorker));
             }
             
-            await Task.Delay(DefaultDelayMs, stoppingToken);
+            if (!stoppingToken.IsCancellationRequested)
+            {
+                await Task.Delay(DefaultDelayMs, stoppingToken);
+            }
         }
     }
 }
