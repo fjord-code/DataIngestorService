@@ -4,7 +4,7 @@ namespace DataIngestorService.Host.Workers;
 
 public class DataIngestorWorker(
     ILogger<DataIngestorWorker> logger,
-    IDataIngestionOrchestratorFactory weakAppClientFactory) : BackgroundService
+    IDataIngestionOrchestratorFactory dataIngestionOrchestratorFactory) : BackgroundService
 {
     private const int DefaultDelayMs = 30 * 1000;
 
@@ -15,7 +15,7 @@ public class DataIngestorWorker(
             logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
             try
             {
-                using var scopedClient = weakAppClientFactory.CreateService();
+                using var scopedClient = dataIngestionOrchestratorFactory.CreateService();
                 var success = await scopedClient.Service.IngestCycleAsync(stoppingToken);
 
                 if (success)
