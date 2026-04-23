@@ -15,65 +15,22 @@ namespace DataIngestorService.Infrastructure.Tests.Api;
 
 public class WeakAppClientTests
 {
-    private readonly Mock<IHttpClientFactory> _httpClientFactoryMock;
     private readonly Mock<IOptions<WeakAppOptions>> _optionsMock;
     private readonly Mock<ILogger<WeakAppClient>> _loggerMock;
     private readonly WeakAppOptions _options;
 
     public WeakAppClientTests()
     {
-        _httpClientFactoryMock = new Mock<IHttpClientFactory>();
         _optionsMock = new Mock<IOptions<WeakAppOptions>>();
         _loggerMock = new Mock<ILogger<WeakAppClient>>();
-        _options = new WeakAppOptions();
+        _options = new WeakAppOptions()
+        {
+            BaseUrl = WeakAppConstants.DefaultBaseUrl,
+           MeteringEndpoint = WeakAppConstants.DefaultMeteringEndpoint,
+        };
 
         _optionsMock.Setup(x => x.Value).Returns(_options);
     }
-
-    #region Constructor Tests
-
-    [Fact]
-    public void Constructor_WithValidDependencies_InitializesSuccessfully()
-    {
-        // Arrange
-        HttpClient httpClient = CreateWeakAppHttpClient();
-        _httpClientFactoryMock
-            .Setup(x => x.CreateClient(WeakAppConstants.AppName))
-            .Returns(httpClient);
-
-        // Act
-        var sut = new WeakAppClient(
-            _httpClientFactoryMock.Object,
-            _optionsMock.Object,
-            _loggerMock.Object);
-
-        // Assert
-        Assert.NotNull(sut);
-    }
-
-    [Fact]
-    public void Constructor_CreatesHttpClientWithCorrectNamedClient()
-    {
-        // Arrange
-        var httpClient = CreateWeakAppHttpClient();
-        _httpClientFactoryMock
-            .Setup(x => x.CreateClient(WeakAppConstants.AppName))
-            .Returns(httpClient)
-            .Verifiable();
-
-        // Act
-        _ = new WeakAppClient(
-            _httpClientFactoryMock.Object,
-            _optionsMock.Object,
-            _loggerMock.Object);
-
-        // Assert
-        _httpClientFactoryMock.Verify(
-            x => x.CreateClient(WeakAppConstants.AppName),
-            Times.Once);
-    }
-
-    #endregion
 
     #region FetchReadingsAsync Tests
 
@@ -90,12 +47,9 @@ public class WeakAppClientTests
             jsonResponse);
 
         var httpClient = CreateWeakAppHttpClient(handlerMock);
-        _httpClientFactoryMock
-            .Setup(x => x.CreateClient(WeakAppConstants.AppName))
-            .Returns(httpClient);
 
         var sut = new WeakAppClient(
-            _httpClientFactoryMock.Object,
+            httpClient,
             _optionsMock.Object,
             _loggerMock.Object);
 
@@ -138,12 +92,9 @@ public class WeakAppClientTests
             "null");
 
         var httpClient = CreateWeakAppHttpClient(handlerMock);
-        _httpClientFactoryMock
-            .Setup(x => x.CreateClient(WeakAppConstants.AppName))
-            .Returns(httpClient);
 
         var sut = new WeakAppClient(
-            _httpClientFactoryMock.Object,
+            httpClient,
             _optionsMock.Object,
             _loggerMock.Object);
 
@@ -165,12 +116,9 @@ public class WeakAppClientTests
             "[]");
 
         var httpClient = CreateWeakAppHttpClient(handlerMock);
-        _httpClientFactoryMock
-            .Setup(x => x.CreateClient(WeakAppConstants.AppName))
-            .Returns(httpClient);
 
         var sut = new WeakAppClient(
-            _httpClientFactoryMock.Object,
+            httpClient,
             _optionsMock.Object,
             _loggerMock.Object);
 
@@ -192,12 +140,9 @@ public class WeakAppClientTests
             string.Empty);
 
         var httpClient = CreateWeakAppHttpClient(handlerMock);
-        _httpClientFactoryMock
-            .Setup(x => x.CreateClient(WeakAppConstants.AppName))
-            .Returns(httpClient);
 
         var sut = new WeakAppClient(
-            _httpClientFactoryMock.Object,
+            httpClient,
             _optionsMock.Object,
             _loggerMock.Object);
 
@@ -228,12 +173,9 @@ public class WeakAppClientTests
             });
 
         var httpClient = CreateWeakAppHttpClient(handlerMock);
-        _httpClientFactoryMock
-            .Setup(x => x.CreateClient(WeakAppConstants.AppName))
-            .Returns(httpClient);
 
         var sut = new WeakAppClient(
-            _httpClientFactoryMock.Object,
+            httpClient,
             _optionsMock.Object,
             _loggerMock.Object);
 
@@ -261,7 +203,8 @@ public class WeakAppClientTests
     {
         return new HttpClient(handlerMock.Object)
         {
-            BaseAddress = new Uri(WeakAppConstants.DefaultBaseUrl)
+            BaseAddress = new Uri(WeakAppConstants.DefaultBaseUrl),
+
         };
     }
 
