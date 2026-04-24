@@ -1,0 +1,74 @@
+services:
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  weakapp:
+    image: weak-app
+    container_name: weakapp
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  data-ingestor:
+    build:
+      context: .
+      dockerfile: src/DataIngestorService.Host/Dockerfile
+    container_name: data-ingestor
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_URLS=http://+:5000
+      - WeakApp__BaseUrl=http://weakapp:8080
+      - WeakApp__MeteringEndpoint=${WEAKAPP_METERING_ENDPOINT}
+      - WeakApp__TimeoutSeconds=${WEAKAPP_TIMEOUT_SECONDS}
+      - WeakApp__RetryCount=${WEAKAPP_RETRY_COUNT}
+      - WeakApp__CircuitBreakerFailureCount=${WEAKAPP_CB_FAILURE_COUNT}
+      - WeakApp__CircuitBreakerBreakDurationSeconds=${WEAKAPP_CB_BREAK_DURATION}
+      - WeakApp__ApiKey=${WEAKAPP_API_KEY}
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__Port=5672
+      - RabbitMQ__UserName=${RABBITMQ_USER}
+      - RabbitMQ__Password=${RABBITMQ_PASS}
+      - RabbitMQ__ExchangeName=${RABBITMQ_EXCHANGE}
+      - RabbitMQ__QueueName=${RABBITMQ_QUEUE}
+      - RabbitMQ__QueueKey=${RABBITMQ_QUEUE_KEY}
+      - Polling__IntervalSeconds=${POLLING_INTERVAL}
+    
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      weakapp:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl -f http://localhost:5000/health/live || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
