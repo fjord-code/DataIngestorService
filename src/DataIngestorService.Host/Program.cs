@@ -1,12 +1,12 @@
 using DataIngestorService.Core.Contracts.Options;
 using DataIngestorService.Core.Extensions.Contracts.Options;
+using DataIngestorService.Host.Extensions;
 using DataIngestorService.Host.Workers;
 using DataIngestorService.Infrastructure;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
-using OpenTelemetry.Metrics;
 using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,8 +31,7 @@ builder.Services.AddHealthChecks()
         name: "rabbitmq",
         tags: ["ready"]);
 
-builder.Services.AddOpenTelemetry()
-    .WithMetrics(m => m.AddPrometheusExporter());
+builder.AddOtlp();
 
 builder.Services.AddInfrastructureServices();
 
