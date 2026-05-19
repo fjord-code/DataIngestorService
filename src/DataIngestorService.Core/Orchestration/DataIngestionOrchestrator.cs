@@ -1,5 +1,4 @@
 ﻿using DataIngestorService.Core.Contracts.Mesaging;
-using DataIngestorService.Core.Contracts.Mesaging.Dto;
 using DataIngestorService.Core.Contracts.WeakApp;
 using DataIngestorService.Core.Mappings;
 using DataIngestorService.Core.Orchestration.Contracts;
@@ -27,7 +26,10 @@ public class DataIngestionOrchestrator : IDataIngestionOrchestrator
     {
         try
         {
-            _logger.LogDebug("Starting ingestion cycle...");
+            if (_logger.IsEnabled(LogLevel.Debug))
+            {
+                _logger.LogDebug("Starting ingestion cycle...");
+            }
 
             var readings = await _weakAppClient.FetchReadingsAsync(cancellationToken);
 
@@ -45,23 +47,37 @@ public class DataIngestionOrchestrator : IDataIngestionOrchestrator
                 await _dataPublisher.PublishAsync(message, cancellationToken);
                 publishedCount++;
 
-                _logger.LogDebug("Published message {EventId} for reading.",
-                    message);
+                if (_logger.IsEnabled(LogLevel.Debug))
+                {
+                    _logger.LogDebug("Published message {EventId} for reading.",
+                        message.EventId);
+                }
             }
 
-            _logger.LogInformation("Ingestion cycle completed: {PublishedCount}/{TotalCount} messages published",
-                publishedCount, readings.Count);
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Ingestion cycle completed: {PublishedCount}/{TotalCount} messages published",
+                    publishedCount, readings.Count);
+            }
 
             return true;
         }
         catch (OperationCanceledException)
         {
-            _logger.LogInformation("Ingestion cycle cancelled (shutdown requested).");
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Ingestion cycle cancelled (shutdown requested).");
+            }
+
             throw;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error during ingestion cycle");
+            if (_logger.IsEnabled(LogLevel.Error))
+            {
+                _logger.LogError(ex, "Exception occurred during ingestion cycle.");
+            }
+
             return false;
         }
     }

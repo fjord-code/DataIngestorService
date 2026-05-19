@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DataIngestorService.Core.Base;
 
@@ -7,12 +8,13 @@ public interface IAbstractFactory<T> where T : class
     ScopedService<T> CreateService();
 }
 
+[ExcludeFromCodeCoverage]
 public abstract class AbstractFactory<T> : IAbstractFactory<T>
     where T : class
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    public AbstractFactory(
+    protected AbstractFactory(
         IServiceScopeFactory serviceScopeFactory)
     {
         _serviceScopeFactory = serviceScopeFactory;
