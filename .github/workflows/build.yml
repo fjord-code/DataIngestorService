@@ -40,7 +40,7 @@ jobs:
             /o:"snow-flake" \
             /d:sonar.token="$SONAR_TOKEN" \
             /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.cs.cobertura.reportsPaths="coverage.xml"
+            /d:sonar.cs.cobertura.reportsPaths="coverage/**/coverage.cobertura.xml"
 
       - name: Build
         run: dotnet build DataIngestorService.slnx --no-restore --configuration Release
@@ -50,9 +50,6 @@ jobs:
           dotnet test DataIngestorService.slnx --no-build --configuration Release \
           --collect:"XPlat Code Coverage" \
           --results-directory coverage
-
-      - name: Combine Coverage Reports
-        run: find coverage -name "coverage.cobertura.xml" -exec cp {} coverage.xml \;
 
       - name: End Sonar Analysis
         env:
