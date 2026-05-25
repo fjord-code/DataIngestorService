@@ -26,7 +26,12 @@ public class WeakAppClientTests
         _options = new WeakAppOptions()
         {
             BaseUrl = WeakAppConstants.DefaultBaseUrl,
-           MeteringEndpoint = WeakAppConstants.DefaultMeteringEndpoint,
+            MeteringEndpoint = WeakAppConstants.DefaultMeteringEndpoint,
+            TimeoutSeconds = 10,
+            RetryCount = 3,
+            CircuitBreakerFailureCount = 5,
+            CircuitBreakerBreakDurationSeconds = 30,
+            ApiKey = "api-key-123",
         };
 
         _optionsMock.Setup(x => x.Value).Returns(_options);

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
 using RabbitMQ.Client;
+using System.Diagnostics.CodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,3 +50,6 @@ app.MapHealthChecks("/health/ready", new HealthCheckOptions
 app.MapPrometheusScrapingEndpoint("/metrics");
 
 app.Run();
+
+[ExcludeFromCodeCoverage]
+public partial class Program { }

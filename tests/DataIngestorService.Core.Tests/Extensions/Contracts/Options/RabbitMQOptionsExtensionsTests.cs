@@ -14,7 +14,10 @@ public class RabbitMQOptionsExtensionsTests
             UserName = "guest",
             Password = "guestPassword123",
             HostName = "localhost",
-            Port = 5672
+            Port = 5672,
+            ExchangeName = "myExchange",
+            QueueName = "myQueue",
+            QueueKey = "myQueueKey"
         };
 
         var expectedConnectionString = "amqp://guest:guestPassword123@localhost:5672";
@@ -35,7 +38,10 @@ public class RabbitMQOptionsExtensionsTests
             UserName = "user/name@domain",
             Password = "pass#word?",
             HostName = "rabbitmq.local",
-            Port = 5672
+            Port = 5672,
+            ExchangeName = "myExchange",
+            QueueName = "myQueue",
+            QueueKey = "myQueueKey"
         };
 
         var expectedConnectionString = "amqp://user%2Fname%40domain:pass%23word%3F@rabbitmq.local:5672";
