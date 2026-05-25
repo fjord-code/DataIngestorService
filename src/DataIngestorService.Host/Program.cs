@@ -36,8 +36,6 @@ builder.AddOtlp();
 
 builder.Services.AddInfrastructureServices();
 
-var config = builder.Configuration;
-
 var app = builder.Build();
 
 app.MapGet("/health/live", () => Results.Ok());
@@ -52,4 +50,4 @@ app.MapPrometheusScrapingEndpoint("/metrics");
 app.Run();
 
 [ExcludeFromCodeCoverage]
-public partial class Program { }
+public static partial class Program { }

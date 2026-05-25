@@ -213,7 +213,7 @@ public class WeakAppClientTests
         };
     }
 
-    private Mock<HttpMessageHandler> SetupHttpMessageHandler(
+    private static Mock<HttpMessageHandler> SetupHttpMessageHandler(
         string expectedEndpoint,
         HttpStatusCode statusCode,
         string responseContent)

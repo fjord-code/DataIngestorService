@@ -62,11 +62,11 @@ public class DataIngestionOrchestrator : IDataIngestionOrchestrator
 
             return true;
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
-            if (_logger.IsEnabled(LogLevel.Information))
+            if (_logger.IsEnabled(LogLevel.Error))
             {
-                _logger.LogInformation("Ingestion cycle cancelled (shutdown requested).");
+                _logger.LogError(ex, "Ingestion cycle cancelled (shutdown requested).");
             }
 
             throw;

@@ -26,7 +26,10 @@ public sealed class WeakAppClient : IWeakAppClient
 
     public async Task<List<WeakAppReading>> FetchReadingsAsync(CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Fetching data from {AppName}...", WeakAppConstants.AppName);
+        if (_logger.IsEnabled(LogLevel.Information))
+        {
+            _logger.LogInformation("Fetching data from {AppName}...", WeakAppConstants.AppName);
+        }
 
         var response = await _httpClient.GetAsync(_options.MeteringEndpoint, cancellationToken);
 
@@ -35,7 +38,10 @@ public sealed class WeakAppClient : IWeakAppClient
         var readings = await response.Content.ReadFromJsonAsync<List<WeakAppReading>>(cancellationToken: cancellationToken)
             ?? new List<WeakAppReading>();
 
-        _logger.LogInformation("Successfully fetched {Count} readings from {AppName}.", readings.Count, WeakAppConstants.AppName);
+        if (_logger.IsEnabled(LogLevel.Information))
+        {
+            _logger.LogInformation("Successfully fetched {Count} readings from {AppName}.", readings.Count, WeakAppConstants.AppName);
+        }
 
         return readings;
     }

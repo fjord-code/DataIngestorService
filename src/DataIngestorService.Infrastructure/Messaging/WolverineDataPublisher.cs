@@ -20,18 +20,11 @@ public class WolverineDataPublisher : IDataPublisher
     public async Task PublishAsync<T>(T message, CancellationToken cancellationToken = default)
         where T : class
     {
-        try
-        {
-            await _messageBus.PublishAsync(message);
+        await _messageBus.PublishAsync(message);
 
-            _logger.LogDebug("Message of type {MessageType} published successfully",
-                typeof(T).Name);
-        }
-        catch (Exception ex)
+        if (_logger.IsEnabled(LogLevel.Debug))
         {
-            _logger.LogError(ex, "Failed to publish message of type {MessageType}",
-                typeof(T).Name);
-            throw;
+            _logger.LogDebug("Message of type {MessageType} published successfully", typeof(T).Name);
         }
     }
 }

@@ -20,11 +20,17 @@ public class DataIngestorWorker(
 
                 if (success)
                 {
+                    if (logger.IsEnabled(LogLevel.Information))
+                    {
                     logger.LogInformation("{ServiceName} successfully finished data fetching and publishing.", scopedClient.Service.GetType().Name);
+                    }
                 }
                 else
                 {
-                    logger.LogWarning("{ServiceName} failed to fetch and publish data", scopedClient.Service.GetType().Name);
+                    if (logger.IsEnabled(LogLevel.Warning))
+                    {
+                        logger.LogWarning("{ServiceName} failed to fetch and publish data", scopedClient.Service.GetType().Name);
+                    }
                 }
             }
             catch (Exception ex)
