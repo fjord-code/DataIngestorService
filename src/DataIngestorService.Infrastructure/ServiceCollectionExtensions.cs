@@ -17,12 +17,14 @@ using Polly.Retry;
 using Polly.Timeout;
 using Serilog;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using Wolverine;
 using Wolverine.ErrorHandling;
 using Wolverine.RabbitMQ;
 
 namespace DataIngestorService.Infrastructure;
 
+[ExcludeFromCodeCoverage]
 public static class ServiceCollectionExtensions
 {
     /// <summary>

@@ -2,9 +2,11 @@
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DataIngestorService.Host.Extensions;
 
+[ExcludeFromCodeCoverage]
 public static class WebAppBuilderExtensions
 {
     public static void AddOtlp(this WebApplicationBuilder builder)
