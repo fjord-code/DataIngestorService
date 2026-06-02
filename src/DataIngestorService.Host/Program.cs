@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Http;
 using RabbitMQ.Client;
 using System.Diagnostics.CodeAnalysis;
 
+namespace DataIngestorService.Host;
+
 [ExcludeFromCodeCoverage]
 public partial class Program
 {
