@@ -8,7 +8,7 @@ public class WeakAppOptions
     public const string SectionName = WeakAppConstants.AppName;
     public string? BaseUrl { get; set; }
     public string? MeteringEndpoint { get; set; }
-    public int? TimeoutSeconds { get; set; }
+    public double? TimeoutSeconds { get; set; }
     public int? RetryCount { get; set; }
     public int? CircuitBreakerFailureCount { get; set; }
     public int? CircuitBreakerBreakDurationSeconds { get; set; }

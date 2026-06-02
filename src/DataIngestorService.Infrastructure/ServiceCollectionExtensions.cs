@@ -42,7 +42,7 @@ public static class ServiceCollectionExtensions
 
         var timeoutStrategyOptions = new TimeoutStrategyOptions()
         {
-            Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds)
+            Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds!.Value)
         };
 
         var retryStrategyOptions = new RetryStrategyOptions<HttpResponseMessage>
@@ -50,7 +50,7 @@ public static class ServiceCollectionExtensions
             ShouldHandle = new PredicateBuilder<HttpResponseMessage>()
                 .Handle<HttpRequestException>()
                 .HandleResult(response => !response.IsSuccessStatusCode),
-            MaxRetryAttempts = options.RetryCount,
+            MaxRetryAttempts = options.RetryCount!.Value,
             BackoffType = DelayBackoffType.Exponential,
             UseJitter = true,
         };
@@ -62,14 +62,14 @@ public static class ServiceCollectionExtensions
                 .HandleResult(response => !response.IsSuccessStatusCode),
             FailureRatio = 0.9,
             SamplingDuration = TimeSpan.FromSeconds(30),
-            MinimumThroughput = options.CircuitBreakerFailureCount,
-            BreakDuration = TimeSpan.FromSeconds(options.CircuitBreakerBreakDurationSeconds)
+            MinimumThroughput = options.CircuitBreakerFailureCount!.Value,
+            BreakDuration = TimeSpan.FromSeconds(options.CircuitBreakerBreakDurationSeconds!.Value)
         };
 
         services
             .AddHttpClient<WeakAppClient>(client =>
             {
-                client.BaseAddress = new Uri(options.BaseUrl);
+                client.BaseAddress = new Uri(options.BaseUrl!);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
                 client.DefaultRequestHeaders.Add("X-Api-Key", options.ApiKey);
             })
@@ -113,7 +113,7 @@ public static class ServiceCollectionExtensions
                 .UseRabbitMq(c =>
                 {
                     c.HostName = options.HostName;
-                    c.Port = options.Port;
+                    c.Port = options.Port!.Value;
                     c.UserName = options.UserName;
                     c.Password = options.Password;
                 })
