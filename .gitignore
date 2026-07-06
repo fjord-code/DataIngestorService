@@ -290,3 +290,6 @@ __pycache__/
 
 # Appsettings
 appsettings.Development.json
+
+# Local environment files
+.env
